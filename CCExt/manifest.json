@@ -1,0 +1,19 @@
+{
+    "name": "Cumcord for Web",
+    "description": "A heavy, throbbing, and easy to use cum expeller; now in your browser.",
+    "version": "0.0.1",
+    "author": "Drake",
+    "content_scripts": [
+        {
+            "matches": ["*://*.discord.com/*"],
+            "js": ["content.js"]
+        }
+    ],
+    "permissions": [
+        "storage",
+        "webRequest",
+        "webRequestBlocking",
+        "*"
+    ],
+    "manifest_version": 2
+}
