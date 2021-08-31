@@ -1,5 +1,20 @@
 const { app, BrowserWindow, webContents, session } = require('electron');
 const Path = require('path')
+const contextMenu = require('electron-context-menu');
+
+const rightClickMenu = contextMenu({
+	append: (defaultActions, parameters, browserWindow) => [
+		{
+			label: 'Search DuckDuckGo for “{selection}”',
+			visible: parameters.selectionText.trim().length > 0,
+			click: () => {
+				shell.openExternal(`https://duckduckgo.com/?q=${encodeURIComponent(parameters.selectionText)}`);
+			}
+		}
+	],
+	showSearchWithGoogle: false
+});
+
 
 function createWindow() {
 	const win = new BrowserWindow({
@@ -25,6 +40,7 @@ function createWindow() {
 app.whenReady().then(() => {
 	let win = createWindow();
 	app.on('window-all-closed', function () {
+		rightClickMenu();
 		app.quit();
 	});
 });
