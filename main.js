@@ -2,12 +2,6 @@ const { app, BrowserWindow, webContents, session } = require('electron');
 const fetch = require('node-fetch');
 const Path = require('path')
 
-const fetchCumcord = async () => {
-	const response = await fetch("https://cors.bridged.cc/https://raw.githubusercontent.com/Cumcord/Cumcord/stable/dist/build.js");
-	const text = await response.text()
-	return text;
-}
-
 function createWindow() {
 	const win = new BrowserWindow({
 		width: 800,
@@ -16,13 +10,16 @@ function createWindow() {
 	});
 	win.removeMenu();
 	win.loadFile("index.html")
-	//win.loadURL('https://discord.com/app')
-	win.webContents.openDevTools()
+	win.webContents.on('before-input-event', (event, input) => {
+		if (input.control && input.shift && input.key.toLowerCase() === 'i') {
+			win.webContents.openDevTools()
+		}
+	});
 	let ses = win.webContents.session;
 	ses.webRequest.onHeadersReceived(({ responseHeaders, url }, done) => {
 		delete responseHeaders['content-security-policy'];
 		done({responseHeaders});
-	})
+	});
 	ses.loadExtension(Path.join(__dirname, 'CCExt'));
 	return win;
 }
