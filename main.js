@@ -1,5 +1,4 @@
 const { app, BrowserWindow, webContents, session } = require('electron');
-const fetch = require('node-fetch');
 const Path = require('path')
 
 function createWindow() {
@@ -13,11 +12,11 @@ function createWindow() {
 	win.webContents.on('before-input-event', (event, input) => {
 		if (input.control && input.shift && input.key.toLowerCase() === 'i') {
 			win.webContents.openDevTools()
-		}
+		} //Why does electron not have devtools on a shortcut by default
 	});
 	let ses = win.webContents.session;
 	ses.webRequest.onHeadersReceived(({ responseHeaders, url }, done) => {
-		delete responseHeaders['content-security-policy'];
+		delete responseHeaders['content-security-policy']; //Cumcord (and other client mods, if I use them) requires removing CSP
 		done({responseHeaders});
 	});
 	ses.loadExtension(Path.join(__dirname, 'CCExt'));
